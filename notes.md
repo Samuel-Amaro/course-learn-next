@@ -66,3 +66,22 @@ O <Image>Componente é uma extensão da <img>tag HTML e vem com otimização aut
 - Redimensionar imagens para evitar o envio de imagens grandes para dispositivos com uma janela de visualização menor.
 - Imagens de carregamento lento por padrão (as imagens são carregadas conforme entram na janela de visualização).
 - Servindo imagens em formatos modernos, como WebPe AVIF, quando o navegador suportar.
+
+## Roteamento aninhado
+
+Next.js usa roteamento de sistema de arquivos onde pastas são usadas para criar rotas aninhadas. Cada pasta representa um segmento de rota que mapeia para um segmento de URL.
+
+Você pode criar interfaces de usuário separadas para cada rota usando arquivos `layout.tsx` e `page.tsx`.
+
+`page.tsx` é um arquivo Next.js especial que exporta um componente React, e é necessário para que a rota seja acessível. Em seu aplicativo, você já tem um arquivo de página: `/app/page.tsx` - esta é a home page associada à rota `/`.
+
+Para criar uma rota aninhada, você pode aninhar pastas umas dentro das outras e adicionar `page.tsx` arquivos dentro delas. Por exemplo:
+
+`/app/dashboard/page.tsx` está associado ao /dashboard caminho. Vamos criar a página para ver como funciona!
+
+Ao ter um nome especial para arquivos de página, o Next.js não permite que você coloque componentes de UI, arquivos de teste e outros códigos relacionados com suas rotas. Apenas o conteúdo dentro do arquivo de página será acessível publicamente. Por exemplo, as pastas /ui e /lib são colocadas dentro da pasta /app junto com suas rotas.
+
+## Criando o layout
+
+No Next.js, você pode usar um `layout.tsx` arquivo especial para criar UI que é compartilhada entre várias páginas.
+
