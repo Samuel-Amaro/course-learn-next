@@ -85,3 +85,18 @@ Ao ter um nome especial para arquivos de página, o Next.js não permite que voc
 
 No Next.js, você pode usar um `layout.tsx` arquivo especial para criar UI que é compartilhada entre várias páginas.
 
+## Por que otimizar a navegação?
+
+Para vincular entre páginas, você tradicionalmente usaria o `<a>` elemento HTML. Há uma atualização de página completa em cada navegação de página!
+
+## O `<Link>` componente
+
+No Next.js, você pode usar o `<Link />` Component para vincular entre páginas no seu aplicativo. `<Link>` permite que você faça navegação do lado do cliente com JavaScript.
+
+### Divisão automática de código e pré-busca
+
+Para melhorar a experiência de navegação, o Next.js divide automaticamente o código do seu aplicativo por segmentos de rota. Isso é diferente de um React SPA tradicional, onde o navegador carrega todo o código do seu aplicativo no carregamento inicial.
+
+Dividir o código por rotas significa que as páginas ficam isoladas. Se uma determinada página lançar um erro, o resto do aplicativo ainda funcionará.
+
+Além disso, na produção, sempre que <Link> componentes aparecem na viewport do navegador, o Next.js automaticamente pré-busca o código para a rota vinculada em segundo plano. No momento em que o usuário clica no link, o código para a página de destino já estará carregado em segundo plano, e é isso que torna a transição da página quase instantânea!
