@@ -160,3 +160,80 @@ Ao usar este padrão, você pode:
 - Use um padrão JavaScript nativo que pode ser aplicado a qualquer biblioteca ou estrutura.
 
 Entretanto, há uma desvantagem em confiar apenas neste padrão JavaScript: o que acontece se uma solicitação de dados for mais lenta que todas as outras?
+
+## O que é renderização estática?
+
+Sempre que um usuário visita seu aplicativo, o resultado em cache é servido. Há alguns benefícios da renderização estática:
+
+- Sites **mais rápidos** - Conteúdo pré-renderizado pode ser armazenado em cache e distribuído globalmente. Isso garante que usuários ao redor do mundo possam acessar o conteúdo do seu site de forma mais rápida e confiável.
+- **Carga reduzida do servidor** - Como o conteúdo é armazenado em cache, seu servidor não precisa gerar conteúdo dinamicamente para cada solicitação do usuário.
+- **SEO** - Conteúdo pré-renderizado é mais fácil para rastreadores de mecanismos de busca indexarem, pois o conteúdo já está disponível quando a página carrega. Isso pode levar a classificações aprimoradas em mecanismos de busca.
+
+A renderização estática é útil para UI sem dados ou dados compartilhados entre usuários , como uma postagem de blog estática ou uma página de produto. Pode não ser uma boa opção para um painel que tenha dados personalizados que sejam atualizados regularmente.
+
+O oposto da renderização estática é a renderização dinâmica.
+
+## O que é renderização dinâmica?
+
+Com a renderização dinâmica, o conteúdo é renderizado no servidor para cada usuário no momento da solicitação (quando o usuário visita a página). Há alguns benefícios da renderização dinâmica:
+
+- Dados em Tempo Real - A renderização dinâmica permite que seu aplicativo exiba dados em tempo real ou atualizados com frequência. Isso é ideal para aplicativos em que os dados mudam com frequência.
+- Conteúdo específico do usuário - É mais fácil fornecer conteúdo personalizado, como painéis ou perfis de usuário, e atualizar os dados com base na interação do usuário.
+- Informações sobre o tempo de solicitação - A renderização dinâmica permite que você acesse informações que só podem ser conhecidas no momento da solicitação, como cookies ou parâmetros de pesquisa de URL.
+
+## O que é streaming?
+
+Streaming é uma técnica de transferência de dados que permite dividir uma rota em "pedaços" menores e transmiti-los progressivamente do servidor para o cliente à medida que ficam prontos.
+
+Ao fazer streaming, você pode evitar que solicitações lentas de dados bloqueiem sua página inteira. Isso permite que o usuário veja e interaja com partes da página sem esperar que todos os dados sejam carregados antes que qualquer UI possa ser mostrada ao usuário.
+
+O streaming funciona bem com o modelo de componentes do React, pois cada componente pode ser considerado um bloco.
+
+Há duas maneiras de implementar streaming no Next.js:
+
+1. No nível da página, com o `loading.tsx` arquivo.
+2. Para componentes específicos, com `<Suspense>`.
+
+loading.tsx é um arquivo Next.js especial criado sobre o Suspense, que permite criar uma interface de usuário de fallback para ser exibida como uma substituição enquanto o conteúdo da página é carregado.
+
+O usuário não precisa esperar a página terminar de carregar antes de navegar (isso é chamado de navegação interrompível).
+
+### Adicionando esqueletos de carregamento
+
+Um esqueleto de carregamento é uma versão simplificada da IU. Muitos sites os usam como um espaço reservado (ou fallback) para indicar aos usuários que o conteúdo está sendo carregado. Qualquer IU que você adicionar loading.tsxserá incorporada como parte do arquivo estático e enviada primeiro. Então, o restante do conteúdo dinâmico será transmitido do servidor para o cliente.
+
+## Grupo de rotas
+
+Os grupos de rotas permitem que você organize arquivos em grupos lógicos sem afetar a estrutura do caminho da URL. Quando você cria uma nova pasta usando parênteses (), o nome não será incluído no caminho da URL. Então `/dashboard/(overview)/page.tsx` se torna `/dashboard.`
+
+Aqui, você está usando um grupo de rotas para garantir que loading.tsx se aplique somente à sua página de visão geral do painel. No entanto, você também pode usar grupos de rotas para separar seu aplicativo em seções (por exemplo, (marketing) rotas e (shop) rotas) ou por equipes para aplicativos maiores.
+
+### Transmitindo um componente
+
+Até agora, você está transmitindo uma página inteira. Mas você também pode ser mais granular e transmitir componentes específicos usando React Suspense.
+
+O Suspense permite que você adie a renderização de partes do seu aplicativo até que alguma condição seja atendida (por exemplo, dados são carregados). Você pode encapsular seus componentes dinâmicos no Suspense. Então, passe a ele um componente fallback para mostrar enquanto o componente dinâmico carrega.
+
+## Decidindo onde colocar os limites do Suspense
+
+O local onde você coloca os limites do seu Suspense dependerá de algumas coisas:
+
+1. Como você quer que o usuário experimente a página enquanto ela é transmitida.
+2. Qual conteúdo você deseja priorizar.
+3. Se os componentes dependem da busca de dados.
+
+Dê uma olhada na sua página do painel. Há algo que você teria feito diferente?
+
+Não se preocupe. Não há uma resposta certa.
+
+- Você pode transmitir a página inteira como fizemos com loading.tsx..., mas isso pode levar a um tempo de carregamento maior se um dos componentes tiver uma busca de dados lenta.
+- Você pode transmitir cada componente individualmente... mas isso pode fazer com que a interface do usuário apareça na tela quando estiver pronta.
+- Você também pode criar um efeito escalonado por meio de streaming de seções de página . Mas você precisará criar componentes wrapper.
+
+Onde você coloca seus limites de suspense irá variar dependendo do seu aplicativo. Em geral, é uma boa prática mover suas buscas de dados para os componentes que precisam delas e, então, encapsular esses componentes em Suspense. Mas não há nada de errado em transmitir as seções ou a página inteira se for isso que seu aplicativo precisa.
+
+Não tenha medo de experimentar o Suspense e ver o que funciona melhor. É uma API poderosa que pode ajudar você a criar experiências de usuário mais agradáveis.
+
+## Olhando para o futuro
+
+Os componentes de streaming e servidor nos oferecem novas maneiras de lidar com a busca de dados e estados de carregamento, com o objetivo final de melhorar a experiência do usuário final.
