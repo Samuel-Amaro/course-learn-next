@@ -237,3 +237,37 @@ Não tenha medo de experimentar o Suspense e ver o que funciona melhor. É uma A
 ## Olhando para o futuro
 
 Os componentes de streaming e servidor nos oferecem novas maneiras de lidar com a busca de dados e estados de carregamento, com o objetivo final de melhorar a experiência do usuário final.
+
+## Pré-renderização parcial Partial Prerendering (PPR)
+
+A pré-renderização parcial é um recurso experimental introduzido no Next.js 14. 
+
+### Rotas estáticas vs. dinâmicas
+
+Para a maioria dos aplicativos web criados hoje, você escolhe entre renderização estática e dinâmica para todo o seu aplicativo ou para uma rota específica . E no Next.js, se você chamar uma função dinâmica em uma rota (como consultar seu banco de dados), a rota inteira se torna dinâmica.
+
+No entanto, a maioria das rotas não são totalmente estáticas ou dinâmicas. Por exemplo, considere um site de comércio eletrônico. Talvez você queira renderizar estaticamente a maior parte da página de informações do produto, mas talvez queira buscar o carrinho do usuário e os produtos recomendados dinamicamente, o que permite que você mostre conteúdo personalizado aos seus usuários.
+
+## O que é pré-renderização parcial?
+
+O Next.js 14 introduziu uma versão experimental do Partial Prerendering – um novo modelo de renderização que permite combinar os benefícios da renderização estática e dinâmica na mesma rota.
+
+Quando um usuário visita uma rota:
+
+- Um shell de rota estática que inclui a barra de navegação e informações do produto é servido, garantindo um carregamento inicial rápido.
+- O shell deixa buracos onde conteúdo dinâmico, como o carrinho e produtos recomendados, serão carregados de forma assíncrona.
+- Os furos assíncronos são transmitidos em paralelo, reduzindo o tempo geral de carregamento da página.
+
+## Como funciona a pré-renderização parcial?
+
+Pré-renderização parcial usa o Suspense do React(que você aprendeu no capítulo anterior) para adiar a renderização de partes do seu aplicativo até que alguma condição seja atendida (por exemplo, os dados são carregados).
+
+O fallback Suspense é incorporado ao arquivo HTML inicial junto com o conteúdo estático. No momento da construção (ou durante a revalidação), o conteúdo estático é pré-renderizado para criar um shell estático. A renderização do conteúdo dinâmico é adiada até que o usuário solicite a rota.
+
+Envolver um componente em Suspense não torna o componente em si dinâmico, mas o Suspense é usado como um limite entre seu código estático e dinâmico.
+
+É isso. Você pode não ver uma diferença em seu aplicativo em desenvolvimento, mas deve notar uma melhora de desempenho em produção. O Next.js pré-renderizará as partes estáticas de sua rota e adiará as partes dinâmicas até que o usuário as solicite.
+
+A grande vantagem do Partial Prerendering é que você não precisa alterar seu código para usá-lo. Desde que você esteja usando o Suspense para encapsular as partes dinâmicas da sua rota, o Next.js saberá quais partes da sua rota são estáticas e quais são dinâmicas.
+
+Acreditamos que o PPR tem o potencial de se tornar o modelo de renderização padrão para aplicativos da web, reunindo o melhor do site estático e da renderização dinâmica. No entanto, ainda é experimental. Esperamos estabilizá-lo no futuro e torná-lo a maneira padrão de construir com Next.js.
