@@ -102,3 +102,61 @@ Para melhorar a experiência de navegação, o Next.js divide automaticamente o 
 Dividir o código por rotas significa que as páginas ficam isoladas. Se uma determinada página lançar um erro, o resto do aplicativo ainda funcionará.
 
 Além disso, na produção, sempre que <Link> componentes aparecem na viewport do navegador, o Next.js automaticamente pré-busca o código para a rota vinculada em segundo plano. No momento em que o usuário clica no link, o código para a página de destino já estará carregado em segundo plano, e é isso que torna a transição da página quase instantânea!
+
+## Escolhendo como buscar dados
+
+### Camada API
+
+APIs são uma camada intermediária entre o código do seu aplicativo e o banco de dados. Há alguns casos em que você pode usar uma API:
+
+- Se você estiver usando serviços de terceiros que fornecem uma API.
+- Se você estiver buscando dados do cliente, você vai querer ter uma camada de API que seja executada no servidor para evitar expor os segredos do seu banco de dados ao cliente.
+
+### Consultas de banco de dados
+
+Ao criar um aplicativo full-stack, você também precisará escrever lógica para interagir com seu banco de dados. Para bancos de dados relacionais como o Postgres, você pode fazer isso com SQL ou com um ORM
+
+Existem alguns casos em que você precisa escrever consultas de banco de dados:
+
+- Ao criar seus endpoints de API, você precisa escrever lógica para interagir com seu banco de dados.
+- Se estiver usando o React Server Components (buscando dados no servidor), você pode pular a camada de API e consultar seu banco de dados diretamente, sem correr o risco de expor os segredos do seu banco de dados ao cliente.
+
+### Usando componentes do servidor para buscar dados
+
+Por padrão, os aplicativos Next.js usam React Server Components . Buscar dados com Server Components é uma abordagem relativamente nova e há alguns benefícios em usá-los:
+
+- Os Componentes de Servidor suportam promessas, fornecendo uma solução mais simples para tarefas assíncronas como busca de dados. Você pode usar async/await a sintaxe sem recorrer a useEffect, useState ou bibliotecas de busca de dados.
+- Os componentes do servidor são executados no servidor, para que você possa manter buscas de dados e lógica caras no servidor e enviar apenas o resultado ao cliente.
+- Como mencionado anteriormente, como os Componentes do Servidor são executados no servidor, você pode consultar o banco de dados diretamente sem uma camada de API adicional.
+
+### Usando SQL
+
+Para seu projeto de painel, você escreverá consultas de banco de dados usando o Vercel Postgres SDKe SQL. Existem algumas razões pelas quais usaremos SQL:
+
+- SQL é o padrão da indústria para consultas em bancos de dados relacionais (por exemplo, ORMs geram SQL internamente).
+- Ter um conhecimento básico de SQL pode ajudar você a entender os fundamentos dos bancos de dados relacionais, permitindo que você aplique seu conhecimento a outras ferramentas.
+- O SQL é versátil, permitindo que você busque e manipule dados específicos.
+- O Vercel Postgres SDK fornece proteção contra injeções de SQL.
+
+Não se preocupe se você nunca usou SQL antes: nós fornecemos as consultas para você.
+
+## O que são cascatas de solicitações(request waterfalls)?
+
+Uma "cascata" se refere a uma sequência de solicitações de rede que dependem da conclusão de solicitações anteriores. No caso de busca de dados, cada solicitação só pode começar quando a solicitação anterior tiver retornado dados.
+
+Esse padrão não é necessariamente ruim. Pode haver casos em que você queira cascatas porque quer que uma condição seja satisfeita antes de fazer a próxima solicitação. Por exemplo, você pode querer buscar o ID de um usuário e as informações do perfil primeiro. Depois de ter o ID, você pode prosseguir para buscar a lista de amigos dele. Nesse caso, cada solicitação é contingente aos dados retornados da solicitação anterior.
+
+No entanto, esse comportamento também pode ser não intencional e afetar o desempenho.
+
+## Busca de dados paralela
+
+Uma maneira comum de evitar cascatas é iniciar todas as solicitações de dados ao mesmo tempo — em paralelo.
+
+Em JavaScript, você pode usar o Promise.all() ou Promise.allSettled() funções para iniciar todas as promessas ao mesmo tempo.
+
+Ao usar este padrão, você pode:
+
+- Comece a executar todas as buscas de dados ao mesmo tempo, o que pode levar a ganhos de desempenho.
+- Use um padrão JavaScript nativo que pode ser aplicado a qualquer biblioteca ou estrutura.
+
+Entretanto, há uma desvantagem em confiar apenas neste padrão JavaScript: o que acontece se uma solicitação de dados for mais lenta que todas as outras?
