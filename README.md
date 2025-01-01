@@ -240,7 +240,7 @@ Os componentes de streaming e servidor nos oferecem novas maneiras de lidar com 
 
 ## Pré-renderização parcial Partial Prerendering (PPR)
 
-A pré-renderização parcial é um recurso experimental introduzido no Next.js 14. 
+A pré-renderização parcial é um recurso experimental introduzido no Next.js 14.
 
 ### Rotas estáticas vs. dinâmicas
 
@@ -271,3 +271,46 @@ Envolver um componente em Suspense não torna o componente em si dinâmico, mas 
 A grande vantagem do Partial Prerendering é que você não precisa alterar seu código para usá-lo. Desde que você esteja usando o Suspense para encapsular as partes dinâmicas da sua rota, o Next.js saberá quais partes da sua rota são estáticas e quais são dinâmicas.
 
 Acreditamos que o PPR tem o potencial de se tornar o modelo de renderização padrão para aplicativos da web, reunindo o melhor do site estático e da renderização dinâmica. No entanto, ainda é experimental. Esperamos estabilizá-lo no futuro e torná-lo a maneira padrão de construir com Next.js.
+
+## Por que usar parâmetros de pesquisa de URL?
+
+Conforme mencionado acima, você usará parâmetros de pesquisa de URL para gerenciar o estado da pesquisa. Esse padrão pode ser novo se você estiver acostumado a fazer isso com o estado do lado do cliente.
+
+Há alguns benefícios em implementar a pesquisa com parâmetros de URL:
+
+- URLs que podem ser marcadas e compartilhadas : como os parâmetros de pesquisa estão na URL, os usuários podem marcar o estado atual do aplicativo, incluindo suas consultas de pesquisa e filtros, para referência futura ou compartilhamento.
+- Renderização do lado do servidor e carregamento inicial : os parâmetros de URL podem ser consumidos diretamente no servidor para renderizar o estado inicial, facilitando o manuseio da renderização do servidor.
+- Análise e rastreamento : ter consultas de pesquisa e filtros diretamente na URL facilita o rastreamento do comportamento do usuário sem exigir lógica adicional do lado do cliente.
+
+## Adicionando a funcionalidade de pesquisa
+
+Estes são os ganchos do cliente Next.js que você usará para implementar a funcionalidade de pesquisa:
+
+- **useSearchParams** - Permite que você acesse os parâmetros da URL atual. Por exemplo, os parâmetros de busca para esta URL `/dashboard/invoices?page=1&query=pending` ficariam assim: {page: '1', query: 'pending'}.
+- **usePathname** - Permite que você leia o nome do caminho da URL atual. Por exemplo, para a rota `/dashboard/invoices`,
+- **useRouter** - Habilita a navegação entre rotas dentro de componentes do cliente programaticamente. Há vários métodos que você pode usar.
+
+### Quando usar o useSearchParams() gancho ou o searchParams suporte(prop)?
+
+Você pode ter notado que usou duas maneiras diferentes de extrair parâmetros de pesquisa. Se você usa uma ou outra depende se está trabalhando no cliente ou no servidor.
+
+- `<Search>` é um componente cliente, então você usou o useSearchParams() gancho para acessar os parâmetros do cliente.
+- `<Table>` é um componente de servidor que busca seus próprios dados, para que você possa passar a searchParams propriedade da página para o componente.
+
+Como regra geral, se você quiser ler os parâmetros do cliente, use o useSearchParams() hook, pois isso evita ter que voltar ao servidor.
+
+## Melhor prática: Debouncing
+
+Você está atualizando a URL a cada pressionamento de tecla e, portanto, consultando seu banco de dados a cada pressionamento de tecla! Isso não é um problema, pois nosso aplicativo é pequeno, mas imagine se seu aplicativo tivesse milhares de usuários, cada um enviando uma nova solicitação ao seu banco de dados a cada pressionamento de tecla.
+
+Debouncing é uma prática de programação que limita a taxa na qual uma função pode disparar. No nosso caso, você só quer consultar o banco de dados quando o usuário tiver parado de digitar.
+
+Como funciona o Debouncing:
+
+- Evento de gatilho(trigger event): quando um evento que deve ser eliminado (como um pressionamento de tecla na caixa de pesquisa) ocorre, um cronômetro é iniciado.
+- Aguardar(await): se um novo evento ocorrer antes que o cronômetro expire, o cronômetro será zerado.
+- Execução(execution): Se o cronômetro atingir o fim da contagem regressiva, a função debounced será executada.
+
+## Adicionando paginação
+
+Adicionar paginação permite que os usuários naveguem pelas diferentes páginas para visualizar todas as faturas. Vamos ver como você pode implementar paginação usando parâmetros de URL, assim como você fez com a pesquisa.
