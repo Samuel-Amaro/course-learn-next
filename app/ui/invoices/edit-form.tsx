@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
-import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
+import { CustomerField, InvoiceForm } from "@/app/lib/definitions";
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
-} from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import { Button } from '@/app/ui/button';
+} from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { Button } from "@/app/ui/button";
+import { updateInvoice } from "@/app/lib/actions";
 
 export default function EditInvoiceForm({
   invoice,
@@ -17,8 +18,15 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  //Por fim, você quer passar o idpara a Ação do Servidor para que você possa atualizar o registro correto no seu banco de dados. Você não pode passar o idcomo um argumento assim:
+  //<form action={updateInvoice(id)}>
+  //Em vez disso, você pode passar idpara a Server Action usando JS bind. Isso garantirá que quaisquer valores passados ​​para a Server Action sejam codificados.
+
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
+  //Nota: Usar um campo de entrada oculto no seu formulário também funciona (por exemplo, <input type="hidden" name="id" value={invoice.id} />). No entanto, os valores aparecerão como texto completo na fonte HTML, o que não é ideal para dados sensíveis como IDs.
   return (
-    <form>
+    <form action={updateInvoiceWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -79,7 +87,7 @@ export default function EditInvoiceForm({
                   name="status"
                   type="radio"
                   value="pending"
-                  defaultChecked={invoice.status === 'pending'}
+                  defaultChecked={invoice.status === "pending"}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -95,7 +103,7 @@ export default function EditInvoiceForm({
                   name="status"
                   type="radio"
                   value="paid"
-                  defaultChecked={invoice.status === 'paid'}
+                  defaultChecked={invoice.status === "paid"}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label

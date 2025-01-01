@@ -314,3 +314,50 @@ Como funciona o Debouncing:
 ## Adicionando paginação
 
 Adicionar paginação permite que os usuários naveguem pelas diferentes páginas para visualizar todas as faturas. Vamos ver como você pode implementar paginação usando parâmetros de URL, assim como você fez com a pesquisa.
+
+## O que são ações do servidor?
+
+As Ações do React Server permitem que você execute código assíncrono diretamente no servidor. Elas eliminam a necessidade de criar endpoints de API para mutar seus dados. Em vez disso, você escreve funções assíncronas que são executadas no servidor e podem ser invocadas a partir dos seus Componentes de Cliente ou Servidor.
+
+A segurança é uma prioridade máxima para aplicativos da web, pois eles podem ser vulneráveis ​​a várias ameaças. É aí que entram as Ações do Servidor. Elas oferecem uma solução de segurança eficaz, protegendo contra diferentes tipos de ataques, protegendo seus dados e garantindo acesso autorizado. As Ações do Servidor conseguem isso por meio de técnicas como solicitações POST, fechamentos criptografados, verificações de entrada rigorosas, hash de mensagens de erro e restrições de host, tudo trabalhando em conjunto para aumentar significativamente a segurança do seu aplicativo.
+
+## Usando formulários com ações do servidor
+
+No React, você pode usar o action atributo no <form> elemento para invocar ações. A ação receberá automaticamente o FormData nativo objeto, contendo os dados capturados.
+
+```js
+// Server Component
+export default function Page() {
+  // Action
+  async function create(formData: FormData) {
+    'use server';
+ 
+    // Logic to mutate data...
+  }
+ 
+  // Invoke the action using the "action" attribute
+  return <form action={create}>...</form>;
+}
+```
+
+Uma vantagem de invocar uma Ação do Servidor dentro de um Componente do Servidor é o aprimoramento progressivo: os formulários funcionam mesmo se o JavaScript estiver desabilitado no cliente.
+
+## Next.js com ações do servidor
+
+As ações do servidor também são profundamente integradas ao cache do Next.js. Quando um formulário é enviado por meio de uma Ação do Servidor, você não só pode usar a ação para alterar dados, mas também pode revalidar o cache associado usando APIs como revalidatePath e revalidateTag.
+
+Bom saber : Em HTML, você passaria uma URL para o actionatributo. Essa URL seria o destino para onde os dados do seu formulário devem ser enviados (geralmente um endpoint de API).
+
+No entanto, no React, o actionatributo é considerado uma propriedade especial, o que significa que o React se baseia nele para permitir que ações sejam invocadas.
+
+Nos bastidores, as Ações do Servidor criam um POSTponto de extremidade da API. É por isso que você não precisa criar pontos de extremidade da API manualmente ao usar as Ações do Servidor.
+
+## Crie um Segmento de Rota Dinâmico com a fatura id
+
+O Next.js permite que você crie Segmentos de Rota Dinâmicos quando você não sabe o nome exato do segmento e quer criar rotas com base em dados. Podem ser títulos de postagens de blog, páginas de produtos, etc. Você pode criar segmentos de rota dinâmicos envolvendo o nome de uma pasta entre colchetes. Por exemplo,  [id],  [post]ou [slug].
+
+UUIDs vs. Chaves de incremento automático
+
+Usamos UUIDs em vez de incrementar chaves (por exemplo, 1, 2, 3, etc.). Isso torna a URL mais longa; no entanto, UUIDs eliminam o risco de colisão de ID, são globalmente exclusivos e reduzem o risco de ataques de enumeração - tornando-os ideais para grandes bancos de dados.
+
+No entanto, se você preferir URLs mais limpas, talvez prefira usar chaves de incremento automático.
