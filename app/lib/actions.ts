@@ -38,11 +38,18 @@ export async function createInvoice(formData: FormData) {
   //Por fim, vamos criar uma nova data com o formato "AAAA-MM-DD" para a data de criação da fatura:
   const date = new Date().toISOString().split("T")[0];
 
-  //Agora que você tem todos os valores necessários para seu banco de dados, você pode criar uma consulta SQL para inserir a nova fatura em seu banco de dados e passar as variáveis:
-  await sql`
+  try {
+    //Agora que você tem todos os valores necessários para seu banco de dados, você pode criar uma consulta SQL para inserir a nova fatura em seu banco de dados e passar as variáveis:
+    await sql`
     INSERT INTO invoices (customer_id, amount, status, date)
     VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
   `;
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to Create Invoice.",
+    };
+  }
 
   //O Next.js tem um Cache de Roteador do Lado do Cliente que armazena os segmentos de rota no navegador do usuário por um tempo. Junto com o prefetching , esse cache garante que os usuários possam navegar rapidamente entre as rotas, reduzindo o número de solicitações feitas ao servidor.
   //Como você está atualizando os dados exibidos na rota de faturas, você quer limpar esse cache e disparar uma nova solicitação para o servidor.
@@ -64,12 +71,19 @@ export async function updateInvoice(id: string, formData: FormData) {
   //Convertendo o valor em centavos.
   const amountInCents = amount * 100;
 
-  //Passando as variáveis ​​para sua consulta SQL.
-  await sql`
+  try {
+    //Passando as variáveis ​​para sua consulta SQL.
+    await sql`
     UPDATE invoices
     SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
     WHERE id = ${id}
   `;
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to Update Invoice.",
+    };
+  }
 
   //Chamada revalidatePathpara limpar o cache do cliente e fazer uma nova solicitação ao servidor.
   revalidatePath("/dashboard/invoices");
@@ -78,7 +92,17 @@ export async function updateInvoice(id: string, formData: FormData) {
 }
 
 export async function deleteInvoice(id: string) {
-  await sql`DELETE FROM invoices WHERE id = ${id}`;
-  //Como essa ação está sendo chamada no /dashboard/invoices caminho, você não precisa chamar redirect. A chamada revalidatePath acionará uma nova solicitação de servidor e renderizará novamente a tabela.
-  revalidatePath("/dashboard/invoices");
+  try {
+    await sql`DELETE FROM invoices WHERE id = ${id}`;
+    //Como essa ação está sendo chamada no /dashboard/invoices caminho, você não precisa chamar redirect. A chamada revalidatePath acionará uma nova solicitação de servidor e renderizará novamente a tabela.
+    //Observe como o redirect está sendo chamado fora do bloco try/catch. Isso ocorre porque o redirect funciona lançando um erro, que seria capturado pelo bloco catch. Para evitar isso, você pode chamar o redirect após o try/catch. O redirect só seria alcançável se o try fosse bem-sucedido.
+    revalidatePath("/dashboard/invoices");
+    revalidatePath("/dashboard/invoices");
+    return { message: "Deleted Invoice." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to Delete Invoice.",
+    };
+  }
 }

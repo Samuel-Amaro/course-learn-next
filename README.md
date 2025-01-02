@@ -354,10 +354,18 @@ Nos bastidores, as Ações do Servidor criam um POSTponto de extremidade da API.
 
 ## Crie um Segmento de Rota Dinâmico com a fatura id
 
-O Next.js permite que você crie Segmentos de Rota Dinâmicos quando você não sabe o nome exato do segmento e quer criar rotas com base em dados. Podem ser títulos de postagens de blog, páginas de produtos, etc. Você pode criar segmentos de rota dinâmicos envolvendo o nome de uma pasta entre colchetes. Por exemplo,  [id],  [post]ou [slug].
+O Next.js permite que você crie Segmentos de Rota Dinâmicos quando você não sabe o nome exato do segmento e quer criar rotas com base em dados. Podem ser títulos de postagens de blog, páginas de produtos, etc. Você pode criar segmentos de rota dinâmicos envolvendo o nome de uma pasta entre colchetes. Por exemplo,  [id],  [post] ou [slug].
 
 UUIDs vs. Chaves de incremento automático
 
 Usamos UUIDs em vez de incrementar chaves (por exemplo, 1, 2, 3, etc.). Isso torna a URL mais longa; no entanto, UUIDs eliminam o risco de colisão de ID, são globalmente exclusivos e reduzem o risco de ataques de enumeração - tornando-os ideais para grandes bancos de dados.
 
 No entanto, se você preferir URLs mais limpas, talvez prefira usar chaves de incremento automático.
+
+## Lidando com todos os erros com `error.tsx`
+
+O `error.tsx` arquivo pode ser usado para definir um limite de UI para um segmento de rota. Ele serve como um catch-all para erros inesperados e permite que você exiba uma UI de fallback para seus usuários.
+
+## Lidando com erros 404 com a notFound função
+
+Outra maneira de lidar com erros graciosamente é usando a notFound função. Enquanto error.tsx é útil para capturar todos os erros, notFound pode ser usada quando você tenta buscar um recurso que não existe.
