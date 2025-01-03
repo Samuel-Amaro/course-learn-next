@@ -369,3 +369,19 @@ O `error.tsx` arquivo pode ser usado para definir um limite de UI para um segmen
 ## Lidando com erros 404 com a notFound função
 
 Outra maneira de lidar com erros graciosamente é usando a notFound função. Enquanto error.tsx é útil para capturar todos os erros, notFound pode ser usada quando você tenta buscar um recurso que não existe.
+
+## O que é acessibilidade?
+
+Acessibilidade se refere a projetar e implementar aplicativos da web que todos podem usar, incluindo aqueles com deficiências. É um tópico vasto que abrange muitas áreas, como navegação por teclado, HTML semântico, imagens, cores, vídeos, etc.
+
+Embora não nos aprofundemos na acessibilidade neste curso, discutiremos os recursos de acessibilidade disponíveis no Next.js e algumas práticas comuns para tornar seus aplicativos mais acessíveis.
+
+## Melhorando a acessibilidade do formulário
+
+Há três coisas que já estamos fazendo para melhorar a acessibilidade em nossos formulários:
+
+- HTML semântico : Usando elementos semânticos ( <input>, <option>, etc) em vez de <div>. Isso permite que as tecnologias assistivas (AT) se concentrem nos elementos de entrada e forneçam informações contextuais apropriadas ao usuário, tornando o formulário mais fácil de navegar e entender.
+- Rotulagem : Incluir <label>e o htmlForatributo garante que cada campo do formulário tenha um rótulo de texto descritivo. Isso melhora o suporte a AT ao fornecer contexto e também melhora a usabilidade ao permitir que os usuários cliquem no rótulo para focar no campo de entrada correspondente.
+- Contorno de Foco : Os campos são estilizados corretamente para mostrar um contorno quando estão em foco. Isso é crítico para acessibilidade, pois indica visualmente o elemento ativo na página, ajudando usuários de teclado e leitor de tela a entender onde estão no formulário. Você pode verificar isso pressionando tab.
+
+Essas práticas estabelecem uma boa base para tornar seus formulários mais acessíveis a muitos usuários. No entanto, elas não abordam validação de formulário e erros.

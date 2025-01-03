@@ -8,29 +8,56 @@ import { z } from "zod";
 
 //Para lidar com a validação de tipo, você tem algumas opções. Embora você possa validar tipos manualmente, usar uma biblioteca de validação de tipo pode economizar tempo e esforço. Para seu exemplo, usaremos Zod, uma biblioteca de validação que prioriza o TypeScript e que pode simplificar essa tarefa para você.
 // importe Zod e defina um esquema que corresponda ao formato do seu objeto de formulário. Este esquema validará o formData antes de salvá-lo em um banco de dados.
+//vamos usar o zod para validar dados de formulario tmabém
 const FormSchema = z.object({
   id: z.string(),
-  customerId: z.string(),
-  amount: z.coerce.number(),
-  status: z.enum(["pending", "paid"]),
+  customerId: z.string({
+    invalid_type_error: "Selecione um cliente.",
+  }),
+  amount: z.coerce.number().gt(0, { message: "Insira um valor maior que $0." }),
+  status: z.enum(["pending", "paid"], {
+    invalid_type_error: "Selecione um status de fatura.",
+  }),
   date: z.string(),
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
+export type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
+
 //Ação do Servidor que será chamada quando o formulário for enviado.
-export async function createInvoice(formData: FormData) {
+//prevState- contém o estado passado do useActionStatehook. Você não o usará na ação neste exemplo, mas é um prop necessário.
+export async function createInvoice(prevState: State, formData: FormData) {
   //Dica: Se você estiver trabalhando com formulários que têm muitos campos, considere usar oentries()método com JavaScriptObject.fromEntries(). Por exemplo:
   //const rawFormData = Object.fromEntries(formData.entries());
 
   //validando os tipos
-  const { amount, customerId, status } = CreateInvoice.parse({
+  // Validate form fields using Zod
+  //safeParse() retornará um objeto contendo um campo success ou error.
+  const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
     status: formData.get("status"),
   });
 
+  //Se a validação do formulário falhar, retorne erros antecipadamente. Caso contrário, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create Invoice.",
+    };
+  }
+
+  // Prepare data for insertion into the database
+  const { customerId, amount, status } = validatedFields.data;
   //Geralmente, é uma boa prática armazenar valores monetários em centavos no seu banco de dados para eliminar erros de ponto flutuante do JavaScript e garantir maior precisão.
   //Vamos converter o valor em centavos:
   const amountInCents = amount * 100;
@@ -59,14 +86,27 @@ export async function createInvoice(formData: FormData) {
   redirect("/dashboard/invoices");
 }
 
-export async function updateInvoice(id: string, formData: FormData) {
+export async function updateInvoice(
+  id: string,
+  prevState: State,
+  formData: FormData
+) {
   //Extraindo os dados de formData.
   //Validando os tipos com Zod.
-  const { customerId, amount, status } = UpdateInvoice.parse({
+  const validatedFields = UpdateInvoice.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
     status: formData.get("status"),
   });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Campos ausentes. Falha ao atualizar fatura.",
+    };
+  }
+
+  const { customerId, amount, status } = validatedFields.data;
 
   //Convertendo o valor em centavos.
   const amountInCents = amount * 100;
