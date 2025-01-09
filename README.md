@@ -385,3 +385,26 @@ Há três coisas que já estamos fazendo para melhorar a acessibilidade em nosso
 - Contorno de Foco : Os campos são estilizados corretamente para mostrar um contorno quando estão em foco. Isso é crítico para acessibilidade, pois indica visualmente o elemento ativo na página, ajudando usuários de teclado e leitor de tela a entender onde estão no formulário. Você pode verificar isso pressionando tab.
 
 Essas práticas estabelecem uma boa base para tornar seus formulários mais acessíveis a muitos usuários. No entanto, elas não abordam validação de formulário e erros.
+
+## O que é autenticação?
+
+A autenticação é uma parte essencial de muitos aplicativos da web hoje em dia. É como um sistema verifica se o usuário é quem ele diz ser.
+
+Um site seguro geralmente usa várias maneiras de verificar a identidade de um usuário. Por exemplo, após inserir seu nome de usuário e senha, o site pode enviar um código de verificação para seu dispositivo ou usar um aplicativo externo como o Google Authenticator. Essa autenticação de dois fatores (2FA) ajuda a aumentar a segurança. Mesmo que alguém descubra sua senha, ele não poderá acessar sua conta sem seu token exclusivo.
+
+## Autenticação vs. Autorização
+
+No desenvolvimento web, autenticação e autorização desempenham papéis diferentes:
+
+- Autenticação é sobre ter certeza de que o usuário é quem ele diz ser. Você está provando sua identidade com algo que você tem, como um nome de usuário e uma senha.
+- A autorização é o próximo passo. Uma vez que a identidade de um usuário é confirmada, a autorização decide quais partes do aplicativo ele tem permissão para usar.
+
+Então, a autenticação verifica quem você é, e a autorização determina o que você pode fazer ou acessar no aplicativo.
+
+### NextAuth.js
+
+Usaremos NextAuth.js para adicionar autenticação ao seu aplicativo. O NextAuth.js abstrai grande parte da complexidade envolvida no gerenciamento de sessões, login e logout e outros aspectos da autenticação. Embora você possa implementar manualmente esses recursos, o processo pode ser demorado e propenso a erros. O NextAuth.js simplifica o processo, fornecendo uma solução unificada para autenticação em aplicativos Next.js.
+
+## Hash de senha
+
+É uma boa prática fazer hash de senhas antes de armazená-las em um banco de dados. O hash converte uma senha em uma sequência de caracteres de comprimento fixo, que parece aleatória, fornecendo uma camada de segurança mesmo se os dados do usuário forem expostos.

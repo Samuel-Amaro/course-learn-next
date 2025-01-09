@@ -1,5 +1,7 @@
 "use server"; //Ao adicionar o 'use server', você marca todas as funções exportadas dentro do arquivo como Server Actions. Essas funções de servidor podem então ser importadas e usadas em componentes Client e Server.
+import { signIn } from "@/auth";
 import { sql } from "@vercel/postgres";
+import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 //Você também pode escrever Server Actions diretamente dentro de Server Components adicionando "use server"dentro da ação. Mas para este curso, manteremos todos eles organizados em um arquivo separado.
@@ -144,5 +146,24 @@ export async function deleteInvoice(id: string) {
     return {
       message: "Database Error: Failed to Delete Invoice.",
     };
+  }
+}
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  try {
+    await signIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials.";
+        default:
+          return "Something went wrong.";
+      }
+    }
+    throw error;
   }
 }
