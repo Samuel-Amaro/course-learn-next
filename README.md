@@ -330,11 +330,11 @@ No React, você pode usar o action atributo no <form> elemento para invocar aç�
 export default function Page() {
   // Action
   async function create(formData: FormData) {
-    'use server';
- 
+    "use server";
+
     // Logic to mutate data...
   }
- 
+
   // Invoke the action using the "action" attribute
   return <form action={create}>...</form>;
 }
@@ -354,7 +354,7 @@ Nos bastidores, as Ações do Servidor criam um POSTponto de extremidade da API.
 
 ## Crie um Segmento de Rota Dinâmico com a fatura id
 
-O Next.js permite que você crie Segmentos de Rota Dinâmicos quando você não sabe o nome exato do segmento e quer criar rotas com base em dados. Podem ser títulos de postagens de blog, páginas de produtos, etc. Você pode criar segmentos de rota dinâmicos envolvendo o nome de uma pasta entre colchetes. Por exemplo,  [id],  [post] ou [slug].
+O Next.js permite que você crie Segmentos de Rota Dinâmicos quando você não sabe o nome exato do segmento e quer criar rotas com base em dados. Podem ser títulos de postagens de blog, páginas de produtos, etc. Você pode criar segmentos de rota dinâmicos envolvendo o nome de uma pasta entre colchetes. Por exemplo, [id], [post] ou [slug].
 
 UUIDs vs. Chaves de incremento automático
 
@@ -408,3 +408,51 @@ Usaremos NextAuth.js para adicionar autenticação ao seu aplicativo. O NextAuth
 ## Hash de senha
 
 É uma boa prática fazer hash de senhas antes de armazená-las em um banco de dados. O hash converte uma senha em uma sequência de caracteres de comprimento fixo, que parece aleatória, fornecendo uma camada de segurança mesmo se os dados do usuário forem expostos.
+
+## Metadados
+
+Metadados são cruciais para SEO e compartilhamento.
+
+### O que são metadados?
+
+No desenvolvimento web, os metadados fornecem detalhes adicionais sobre uma página da web. Os metadados não são visíveis para os usuários que visitam a página. Em vez disso, eles funcionam nos bastidores, incorporados ao HTML da página, geralmente dentro do <head>elemento. Essas informações ocultas são cruciais para mecanismos de busca e outros sistemas que precisam entender melhor o conteúdo da sua página da web.
+
+### Por que os metadados são importantes?
+
+Metadados desempenham um papel significativo na melhoria do SEO de uma página da web, tornando-a mais acessível e compreensível para mecanismos de busca e plataformas de mídia social. Metadados adequados ajudam mecanismos de busca a indexar páginas da web de forma eficaz, melhorando sua classificação nos resultados de pesquisa. Além disso, metadados como o Open Graph melhoram a aparência de links compartilhados em mídias sociais, tornando o conteúdo mais atraente e informativo para os usuários.
+
+### Tipos de metadados
+
+Existem vários tipos de metadados, cada um servindo a um propósito único. Alguns tipos comuns incluem:
+
+Title Metadata : Responsável pelo título de uma página da web que é exibido na aba do navegador. É crucial para SEO, pois ajuda os mecanismos de busca a entender do que se trata a página da web.
+
+```html
+<title>Page Title</title>
+```
+
+Metadados de descrição : esses metadados fornecem uma breve visão geral do conteúdo da página da web e geralmente são exibidos nos resultados dos mecanismos de busca.
+
+```html
+<meta name="description" content="A brief description of the page content." />
+```
+
+Metadados de palavras-chave : esses metadados incluem palavras-chave relacionadas ao conteúdo da página da web, ajudando os mecanismos de busca a indexar a página.
+
+```html
+<meta name="keywords" content="keyword1, keyword2, keyword3" />
+```
+
+Metadados do Open Graph : esses metadados aprimoram a maneira como uma página da web é representada quando compartilhada em plataformas de mídia social, fornecendo informações como título, descrição e imagem de visualização.
+
+```html
+<meta property="og:title" content="Title Here" />
+<meta property="og:description" content="Description Here" />
+<meta property="og:image" content="image_url_here" />
+```
+
+Metadados do Favicon : Esses metadados vinculam o favicon (um pequeno ícone) à página da web, exibida na barra de endereços ou na guia do navegador.
+
+```html
+<link rel="icon" href="path/to/favicon.ico" />
+```

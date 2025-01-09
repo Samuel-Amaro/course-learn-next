@@ -6,6 +6,11 @@ import { lusitana } from "@/app/ui/fonts";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { fetchInvoicesPages } from "@/app/lib/data";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Invoices",
+};
 
 //Os componentes da página aceitam uma propriedade chamada searchParams , para que você possa pegar os parâmetros de URL atuais, e usalos ou passar em diante para componentes
 export default async function Page(props: {
